@@ -225,7 +225,7 @@ export const Section07_Technology: React.FC = () => {
             </div>
 
             {/* Headline */}
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[54px] font-extrabold tracking-tight leading-[1.08] text-white mb-6">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl 2xl:text-6xl font-extrabold tracking-tight leading-[1.08] text-white mb-6">
               TECHNOLOGY BEHIND <br />
               <span className="text-[#31e2da]">THE RESEARCH.</span>
             </h2>

@@ -14,8 +14,50 @@
   --cyan2: #83fff8;
   --orange: #f3a52e;
   --danger: #d56565;
-  --max: 1480px;
+  --max: 1440px;
   --r: 20px;
+}
+
+/* ==========================================================================
+   🎯 DISPLAY SCALING OPTIMIZATION (Windows 125% - 150% Scale & Laptop Screens)
+   - Mặc định 1rem = 16px.
+   - Khi Windows scale 125%, 1920x1080 trở thành viewport ~1536x740px.
+   - Tự động co tỉ lệ rem toàn cục: mọi chữ, khoảng cách padding, gap, card
+     sẽ co gọn lại ~12.5% đến 15%, giữ giao diện sắc sảo, không bị to thô kệch.
+   ========================================================================== */
+
+/* 1. Màn hình Desktop lớn (> 1600px @ 100% scale): Giữ nguyên chuẩn 16px */
+@media screen and (min-width: 1601px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+/* 2. Màn hình Laptop chuẩn & Windows FHD 125% scale (1024px - 1600px) */
+@media screen and (min-width: 1024px) and (max-width: 1600px) {
+  html {
+    font-size: 14px; /* Giảm ~12.5%, bù trừ trực tiếp tỷ lệ 125% scale */
+  }
+  :root {
+    --max: 1280px;
+  }
+}
+
+/* 3. Laptop màn hình nhỏ hoặc Windows 150% scale (chiều cao cửa sổ hạn chế < 840px) */
+@media screen and (min-width: 1024px) and (max-height: 840px) {
+  html {
+    font-size: 13.5px; /* Giảm ~15.6% giúp toàn bộ Hero & Card lọt thấu khung nhìn */
+  }
+  :root {
+    --max: 1220px;
+  }
+}
+
+/* 4. Màn hình máy tính bảng & mobile */
+@media screen and (max-width: 1023px) {
+  html {
+    font-size: 15px;
+  }
 }
 
 html {
@@ -31,6 +73,28 @@ body {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   overflow-x: hidden;
   text-wrap: pretty;
+}
+
+/* Tinh chỉnh compact cho Laptop height thấp */
+@media screen and (min-width: 1024px) and (max-height: 840px) {
+  /* Giảm chiều cao header fixed để tăng không gian hiển thị */
+  header {
+    height: 62px !important;
+  }
+  header > div {
+    height: 62px !important;
+  }
+  /* Giảm khoảng đệm trên của hero để không bị đẩy xuống quá sâu */
+  #hero {
+    padding-top: 5rem !important;
+    padding-bottom: 2rem !important;
+    min-height: calc(100vh - 20px) !important;
+  }
+  /* Giảm khoảng đệm dọc các section */
+  section {
+    padding-top: 4.5rem !important;
+    padding-bottom: 4.5rem !important;
+  }
 }
 
 /* Custom glow & panel utilities */

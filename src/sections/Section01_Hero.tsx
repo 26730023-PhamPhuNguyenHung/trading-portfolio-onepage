@@ -105,7 +105,7 @@ export const Section01_Hero: React.FC = () => {
             </div>
 
             {/* Headline */}
-            <h1 className="text-4xl sm:text-5xl lg:text-[56px] xl:text-[62px] font-black tracking-tight text-white leading-[1.08] text-wrap">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl 2xl:text-6xl font-black tracking-tight text-white leading-[1.08] text-wrap">
               TURN YOUR TRADING IDEA{' '}
               <span className="block mt-1 text-transparent bg-clip-text bg-gradient-to-r from-[#31e2da] via-[#83fff8] to-[#2dd4bf]">
                 INTO A TESTED SYSTEM.
@@ -189,9 +189,9 @@ export const Section01_Hero: React.FC = () => {
             </div>
 
             {/* Form Card */}
-            <div className="bg-[#071a1f] border border-cyan-500/35 rounded-2xl p-6 sm:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.7),0_0_35px_rgba(49,226,218,0.12)] relative z-10">
-              <div className="mb-5">
-                <h2 className="text-2xl font-bold text-white tracking-tight">
+            <div className="bg-[#071a1f] border border-cyan-500/35 rounded-2xl p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.7),0_0_35px_rgba(49,226,218,0.12)] relative z-10">
+              <div className="mb-4">
+                <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
                   Have a trading idea?
                 </h2>
                 <p className="text-xs sm:text-sm text-[#9cb0b4] mt-1">

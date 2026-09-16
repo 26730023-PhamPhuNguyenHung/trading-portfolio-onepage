@@ -32,7 +32,7 @@ export const Section05_HowIFindAnEdge: React.FC = () => {
               </span>
             </div>
 
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[56px] font-black tracking-tight text-white uppercase leading-[1.08]">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl 2xl:text-6xl font-black tracking-tight text-white uppercase leading-[1.08]">
               HOW I FIND AN{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-cyan-200 drop-shadow-[0_0_25px_rgba(34,211,238,0.4)]">
                 EDGE
