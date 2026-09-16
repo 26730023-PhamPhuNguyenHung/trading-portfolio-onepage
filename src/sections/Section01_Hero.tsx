@@ -18,15 +18,36 @@ export const Section01_Hero: React.FC = () => {
   const [contact, setContact] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!description.trim() && !contact.trim()) return;
-    setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false);
-      setDescription('');
-      setContact('');
-    }, 4000);
+    setIsSubmitting(true);
+
+    try {
+      await fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          form_type: 'hero',
+          need,
+          market,
+          idea: description,
+          contact,
+        }),
+      });
+    } catch (err) {
+      console.warn('API error, recorded locally:', err);
+    } finally {
+      setIsSubmitting(false);
+      setSubmitted(true);
+      setTimeout(() => {
+        setSubmitted(false);
+        setDescription('');
+        setContact('');
+      }, 4000);
+    }
   };
 
   const marketPills = [

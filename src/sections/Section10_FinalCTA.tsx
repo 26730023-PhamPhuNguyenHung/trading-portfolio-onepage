@@ -38,15 +38,31 @@ export const Section10_FinalCTA: React.FC = () => {
   const [submitted, setSubmitted] = useState(false);
   const [showCallModal, setShowCallModal] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate submission to backend / webhook
-    setTimeout(() => {
+    try {
+      await fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          form_type: 'final_cta',
+          market: formData.market,
+          idea: formData.hypothesis,
+          need: formData.need,
+          current_stage: formData.stage,
+          platform: formData.platform,
+          preferred_contact: formData.contactMethod,
+          contact: formData.contactValue,
+        }),
+      });
+    } catch (err) {
+      console.warn('API error submitting lead:', err);
+    } finally {
       setIsSubmitting(false);
       setSubmitted(true);
-    }, 900);
+    }
   };
 
   const handleReset = () => {

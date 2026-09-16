@@ -1,0 +1,11 @@
+name = "trading-portfolio-onepage"
+compatibility_date = "2026-09-16"
+pages_build_output_dir = "dist"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "trading-portfolio-db"
+database_id = "8abbe191-7531-4b39-bb89-32b149a969fe"
+
+[vars]
+NOTIFICATION_EMAIL = "hungphamphunguyen@gmail.com"

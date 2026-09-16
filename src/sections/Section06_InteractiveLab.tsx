@@ -520,6 +520,25 @@ ${spec.metricsText}
               <div className="flex flex-col sm:flex-row gap-2.5">
                 <a
                   href="#contact"
+                  onClick={async () => {
+                    try {
+                      await fetch('/api/lead', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                          form_type: 'interactive_lab',
+                          market,
+                          timeframe,
+                          idea,
+                          entry_concept: entryConcept,
+                          risk_model: riskModel,
+                          notes: `Generated Spec: Entry: ${spec.entryText} | Invalidations: ${spec.invalidationText} | Metrics: ${spec.metricsText}`,
+                        }),
+                      });
+                    } catch (e) {
+                      console.warn(e);
+                    }
+                  }}
                   className="flex-1 py-3 px-4 rounded-xl font-semibold text-sm text-[#051013] bg-gradient-to-r from-[#20d8cf] to-[#31e2da] hover:from-[#31e2da] hover:to-[#5efff7] shadow-[0_0_20px_rgba(49,226,218,0.3)] hover:shadow-[0_0_28px_rgba(49,226,218,0.5)] transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Send className="w-4 h-4 text-[#051013]" />
