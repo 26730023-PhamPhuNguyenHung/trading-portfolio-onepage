@@ -434,7 +434,7 @@ export const Section10_FinalCTA: React.FC = () => {
                         MetaTrader 5 / MQL5
                       </option>
                       <option value="Python" className="bg-[#061418]">
-                        Python (pandas, Backtrader, VectorBT)
+                        Python (DuckDB, pandas, Backtrader, VectorBT)
                       </option>
                       <option value="TradingView Pine" className="bg-[#061418]">
                         TradingView (Pine Script v5/v6)

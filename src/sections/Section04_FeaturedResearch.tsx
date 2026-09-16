@@ -825,7 +825,7 @@ export const Section04_FeaturedResearch: React.FC = () => {
             </div>
 
             <div className="mt-6 pt-4 border-t border-[#0f2d33] flex items-center justify-between">
-              <span className="text-xs text-slate-400 font-mono">Framework: Python, Polars, VectorBT, Custom C++ Engine</span>
+              <span className="text-xs text-slate-400 font-mono">Framework: Python, DuckDB, Polars, VectorBT, Custom C++ Engine</span>
               <button
                 onClick={() => setIsMethodologyModalOpen(false)}
                 className="px-4 py-2 bg-cyan-400 hover:bg-cyan-300 text-[#051013] text-xs font-bold rounded-lg transition"

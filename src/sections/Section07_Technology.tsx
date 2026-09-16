@@ -140,6 +140,18 @@ const techStack: TechBadge[] = [
     ),
   },
   {
+    name: 'DuckDB',
+    icon: (
+      <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="10" fill="#FFF000" stroke="#061a22" strokeWidth="1.2" />
+        <circle cx="10" cy="9.5" r="1.6" fill="#061a22" />
+        <circle cx="10.5" cy="9" r="0.6" fill="#FFFFFF" />
+        <path d="M15 11.2C15 11.2 18.5 11.8 18.5 12.8C18.5 13.8 15 14.5 15 14.5Z" fill="#FF7700" stroke="#061a22" strokeWidth="0.8" />
+        <path d="M6.5 14.5C8 17 12 17.5 16 15" stroke="#061a22" strokeWidth="1.2" strokeLinecap="round" />
+      </svg>
+    ),
+  },
+  {
     name: 'TradingView',
     icon: (
       <svg className="w-6 h-4 flex-shrink-0" viewBox="0 0 36 22" fill="none">
