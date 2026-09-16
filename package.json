@@ -1,0 +1,16 @@
+{
+  "name": "trading-portfolio-onepage",
+  "version": "1.0.0",
+  "description": "Quant Research & Trading Portfolio Onepage",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0"
+  },
+  "author": "Pham Phu Nguyen Hung <hungphamphunguyen@gmail.com>",
+  "license": "MIT"
+}
