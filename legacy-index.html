@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#061013" />
+  <title>HUNG / Quant Research</title>
+  <meta name="description" content="Strategy research, backtesting, optimization and trading automation." />
+  <style>
+    :root{
+      --bg:#051013;
+      --bg2:#07171a;
+      --panel:rgba(5,18,22,.84);
+      --panel2:rgba(7,26,30,.72);
+      --line:rgba(76,224,216,.24);
+      --line-strong:rgba(76,224,216,.5);
+      --text:#f4f7f7;
+      --muted:#9cb0b4;
+      --muted2:#6d858b;
+      --cyan:#31e2da;
+      --cyan2:#83fff8;
+      --orange:#f3a52e;
+      --danger:#d56565;
+      --max:1480px;
+      --r:20px;
+      --shadow:0 30px 80px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;background:var(--bg)}
+    body{
+      margin:0;
+      background:
+        radial-gradient(circle at 84% 10%, rgba(36,225,214,.08), transparent 24%),
+        linear-gradient(180deg,#040c0f,#061013 42%,#040b0d);
+      color:var(--text);
+      font:16px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      overflow-x:hidden;
+    }
+    a{color:inherit;text-decoration:none}
+    button,input,textarea,select{font:inherit}
+    button{cursor:pointer}
+    img{max-width:100%;display:block}
+    .container{width:min(var(--max),calc(100% - 48px));margin:auto}
+    .eyebrow{
+      display:flex;align-items:center;gap:12px;
+      text-transform:uppercase;letter-spacing:.28em;font-size:12px;color:#8fb1b7;font-weight:700
+    }
+    .eyebrow:before{content:"";width:28px;height:2px;background:var(--cyan);box-shadow:0 0 14px rgba(49,226,218,.8)}
+    h1,h2,h3,p{margin-top:0}
+    h1,h2{letter-spacing:-.045em;line-height:.98}
+    h1{font-size:clamp(48px,6vw,96px);margin-bottom:26px}
+    h2{font-size:clamp(42px,5vw,78px);margin-bottom:22px}
+    h3{font-size:clamp(21px,2vw,31px);line-height:1.12}
+    .accent{color:var(--cyan2)}
+    .lead{font-size:clamp(19px,1.65vw,28px);line-height:1.48;color:#d1dbde;max-width:760px}
+    .small{font-size:13px;color:var(--muted2)}
+    .section{position:relative;padding:112px 0;border-top:1px solid rgba(255,255,255,.055)}
+    .section:before{
+      content:"";position:absolute;inset:0;pointer-events:none;
+      background-image:linear-gradient(rgba(57,164,162,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(57,164,162,.035) 1px,transparent 1px);
+      background-size:64px 64px;mask-image:linear-gradient(to bottom,transparent,black 20%,black 80%,transparent)
+    }
+    .section>.container{position:relative;z-index:1}
+    .nav{
+      position:fixed;left:0;right:0;top:0;z-index:50;
+      backdrop-filter:blur(18px);
+      background:linear-gradient(180deg,rgba(4,12,15,.92),rgba(4,12,15,.58));
+      border-bottom:1px solid rgba(255,255,255,.06)
+    }
+    .nav-inner{height:74px;display:flex;align-items:center;justify-content:space-between;gap:30px}
+    .brand{font-weight:850;letter-spacing:.03em;font-size:20px;white-space:nowrap}
+    .brand i{font-style:normal;color:var(--cyan);padding:0 8px}
+    .brand span{font-size:13px;font-weight:650;color:#b2c0c4;letter-spacing:.1em}
+    .nav-links{display:flex;align-items:center;gap:34px;color:#cdd8da;font-size:14px}
+    .nav-links a:hover{color:white}
+    .btn{
+      border:1px solid var(--line-strong);
+      background:linear-gradient(180deg,rgba(16,118,117,.52),rgba(7,57,60,.5));
+      color:white;border-radius:12px;padding:14px 22px;font-weight:800;
+      display:inline-flex;align-items:center;justify-content:center;gap:12px;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.025),0 0 26px rgba(49,226,218,.07);
+      transition:.25s ease;
+    }
+    .btn:hover{transform:translateY(-2px);border-color:var(--cyan);box-shadow:0 12px 40px rgba(49,226,218,.13)}
+    .btn.primary{
+      background:linear-gradient(180deg,#2ed6cf,#138b8d);
+      border-color:#7dfff7;color:#fff;text-shadow:0 1px 0 rgba(0,0,0,.28)
+    }
+    .btn.ghost{background:rgba(3,12,15,.55);border-color:rgba(255,255,255,.22)}
+    .btn.wide{width:100%}
+    .hero{
+      min-height:100vh;padding:125px 0 70px;display:grid;align-items:center;position:relative;overflow:hidden;
+      background:
+        linear-gradient(90deg,rgba(3,11,14,.94) 0%,rgba(3,11,14,.8) 42%,rgba(3,11,14,.36) 72%,rgba(3,11,14,.73) 100%),
+        linear-gradient(180deg,rgba(3,11,14,.05),rgba(3,11,14,.8)),
+        url("chart-bg.png") center/cover no-repeat;
+    }
+    .hero:after{
+      content:"";position:absolute;inset:auto 0 0;height:180px;
+      background:linear-gradient(transparent,var(--bg));pointer-events:none
+    }
+    .hero-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:70px;align-items:center;position:relative;z-index:2}
+    .hero-copy{padding-top:30px}
+    .hero .chips{margin:26px 0 30px}
+    .capabilities{display:flex;flex-wrap:wrap;gap:22px 30px;margin-top:34px}
+    .capability{display:flex;align-items:center;gap:10px;font-weight:720;font-size:14px}
+    .icon{
+      width:42px;height:42px;display:grid;place-items:center;border:1px solid var(--line-strong);border-radius:11px;
+      color:var(--cyan);background:rgba(4,21,24,.72);font-weight:900
+    }
+    .chips{display:flex;flex-wrap:wrap;gap:10px}
+    .chip{padding:8px 14px;border:1px solid rgba(87,225,217,.3);border-radius:999px;color:#c6dcdf;background:rgba(5,22,25,.67);font-size:13px}
+    .hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:34px}
+    .panel{
+      background:linear-gradient(180deg,rgba(5,18,22,.93),rgba(4,14,17,.92));
+      border:1px solid var(--line-strong);border-radius:var(--r);box-shadow:var(--shadow)
+    }
+    .form-panel{padding:28px}
+    .form-panel h3{font-size:32px;margin-bottom:6px}
+    label{display:block;font-size:13px;font-weight:760;margin:18px 0 8px;color:#d6e1e3}
+    input,select,textarea{
+      width:100%;border:1px solid rgba(153,202,206,.25);border-radius:9px;
+      background:#0a171c;color:white;padding:13px 14px;outline:none;
+      transition:.2s;border-color:.2s;
+    }
+    textarea{min-height:92px;resize:vertical}
+    input:focus,select:focus,textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(49,226,218,.08)}
+    .trust{display:flex;justify-content:center;gap:7px;margin-top:13px;color:#81979c;font-size:12px}
+    .statsbar{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:54px;border-top:1px solid rgba(255,255,255,.1);padding-top:26px}
+    .stat{padding-right:25px}
+    .stat strong{display:block;font-size:27px;line-height:1.1}
+    .stat span{font-size:13px;color:#a6b8bb}
+    .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:38px}
+    .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:38px}
+    .card{
+      background:linear-gradient(180deg,rgba(6,24,28,.78),rgba(4,14,17,.8));
+      border:1px solid rgba(63,214,206,.34);border-radius:15px;padding:24px;
+      min-height:190px;position:relative;overflow:hidden
+    }
+    .card:after{
+      content:"";position:absolute;width:160px;height:160px;border-radius:50%;right:-90px;top:-90px;
+      background:rgba(49,226,218,.035);filter:blur(2px)
+    }
+    .card p{color:#b7c6c9;margin-bottom:0}
+    .card .micro{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:#638991;margin-top:22px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08)}
+    .center{text-align:center}
+    .process{display:grid;grid-template-columns:repeat(8,1fr);gap:10px;margin-top:34px}
+    .step{
+      min-height:205px;padding:18px 16px;border:1px solid rgba(62,209,201,.35);border-radius:12px;background:rgba(4,17,20,.72)
+    }
+    .step b{display:block;color:var(--cyan);font-size:15px;margin-bottom:26px}
+    .step strong{display:block;font-size:16px;margin-bottom:11px}
+    .step p{font-size:13px;color:#9db0b3;margin:0}
+    .case-grid{display:grid;grid-template-columns:1.45fr .85fr;gap:28px;margin-top:34px}
+    .dashboard{padding:18px}
+    .fake-tabs{display:flex;gap:8px;margin-bottom:14px}
+    .fake-tab{padding:9px 13px;border:1px solid rgba(69,203,198,.26);border-radius:8px;font-size:12px}
+    .chart{
+      height:300px;border-radius:12px;border:1px solid rgba(255,255,255,.08);position:relative;overflow:hidden;
+      background:
+        linear-gradient(180deg,rgba(10,51,53,.38),rgba(3,13,16,.35)),
+        url("chart-bg.png") center 47%/cover no-repeat;
+    }
+    .chart:after{
+      content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(3,13,16,.5),transparent 25%,transparent 75%,rgba(3,13,16,.35))
+    }
+    .metric-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+    .metric{padding:14px;border:1px solid rgba(255,255,255,.09);border-radius:10px;background:rgba(5,18,21,.7)}
+    .metric strong{display:block;font-size:22px}
+    .metric span{font-size:12px;color:#8fa4a8}
+    .side-list{display:grid;gap:18px}
+    .feature{display:grid;grid-template-columns:52px 1fr;gap:16px;padding:22px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+    .feature:last-child{border-bottom:0}
+    .feature h3{font-size:21px;margin-bottom:7px}
+    .feature p{color:#a9b9bc;margin:0}
+    .edge-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:34px}
+    .edge-card{min-height:430px;display:flex;flex-direction:column}
+    .edge-card ul{padding-left:20px;color:#aebdc0}
+    .edge-card li{margin:5px 0}
+    .mini-chart{
+      margin-top:auto;height:120px;border:1px solid rgba(255,255,255,.08);border-radius:10px;
+      background:url("chart-bg.png") center/cover no-repeat;filter:saturate(.9) brightness(.85)
+    }
+    .lab-grid{display:grid;grid-template-columns:.8fr .95fr .95fr;gap:18px;align-items:stretch;margin-top:34px}
+    .lab-intro{padding-right:28px}
+    .lab-intro .feature{grid-template-columns:44px 1fr;padding:12px 0}
+    .lab-intro .feature h3{font-size:16px}
+    .lab-intro .feature p{font-size:13px}
+    .lab-panel{padding:26px}
+    .check-list{display:grid;gap:15px;margin-top:20px}
+    .check-item{display:grid;grid-template-columns:34px 1fr;gap:12px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.07)}
+    .check{width:30px;height:30px;display:grid;place-items:center;border:1px solid var(--cyan);border-radius:50%;color:var(--cyan);font-weight:900}
+    .pipeline{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;margin-top:36px}
+    .pipe{padding:20px 16px;border:1px solid rgba(54,211,203,.34);border-radius:12px;background:rgba(5,20,23,.8);min-height:180px}
+    .pipe .icon{margin-bottom:18px}
+    .pipe strong{display:block;margin-bottom:8px}
+    .pipe p{font-size:13px;color:#9eb0b3}
+    .techs{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+    .tech{border:1px solid rgba(68,202,196,.28);padding:13px 18px;border-radius:10px;background:rgba(7,20,24,.8);font-weight:800}
+    .privacy-hero{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center}
+    .shield{
+      aspect-ratio:1;max-width:420px;margin-left:auto;border-radius:32%;
+      background:
+        radial-gradient(circle,rgba(52,229,217,.2),transparent 56%),
+        linear-gradient(135deg,rgba(35,229,214,.08),rgba(1,8,10,.03));
+      border:1px solid rgba(49,226,218,.16);display:grid;place-items:center;
+      font-size:120px;color:var(--cyan);text-shadow:0 0 35px rgba(49,226,218,.25)
+    }
+    .audience-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:34px}
+    .audience-card ul{list-style:none;padding:0;margin:22px 0 0}
+    .audience-card li{padding:13px 0;border-top:1px solid rgba(255,255,255,.07);color:#b9c7ca}
+    .footer-cta{
+      min-height:800px;display:grid;align-items:center;
+      background:
+        linear-gradient(90deg,rgba(3,10,13,.94),rgba(3,10,13,.72) 48%,rgba(3,10,13,.65)),
+        url("chart-bg.png") center/cover no-repeat;
+    }
+    .footer-grid{display:grid;grid-template-columns:1.1fr .75fr;gap:70px;align-items:center}
+    .usp-row{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:40px}
+    .usp{padding-right:18px;border-right:1px solid rgba(255,255,255,.12)}
+    .usp:last-child{border-right:0}
+    .usp strong{display:block;font-size:14px}
+    .usp span{font-size:12px;color:#91a4a8}
+    .disclaimer{margin-top:16px;font-size:11px;color:#72868b;text-align:center}
+    .toast{
+      position:fixed;right:24px;bottom:24px;background:#0b2428;border:1px solid var(--cyan);padding:14px 18px;border-radius:12px;
+      transform:translateY(20px);opacity:0;pointer-events:none;transition:.25s;z-index:100;box-shadow:var(--shadow)
+    }
+    .toast.show{transform:none;opacity:1}
+    @media(max-width:1100px){
+      .hero-grid,.case-grid,.privacy-hero,.footer-grid{grid-template-columns:1fr}
+      .hero{padding-top:110px}
+      .form-panel{max-width:720px}
+      .process{grid-template-columns:repeat(4,1fr)}
+      .grid4,.edge-grid{grid-template-columns:repeat(2,1fr)}
+      .pipeline{grid-template-columns:repeat(4,1fr)}
+      .lab-grid{grid-template-columns:1fr 1fr}
+      .lab-intro{grid-column:1/-1}
+      .audience-grid,.grid3{grid-template-columns:1fr 1fr}
+      .shield{margin:0}
+    }
+    @media(max-width:760px){
+      .container{width:min(100% - 28px,var(--max))}
+      .nav-links a:not(.btn){display:none}
+      .brand span{display:none}
+      .section{padding:82px 0}
+      h1{font-size:48px}
+      h2{font-size:42px}
+      .hero-grid{gap:35px}
+      .statsbar,.usp-row{grid-template-columns:repeat(2,1fr);gap:24px}
+      .grid3,.grid4,.edge-grid,.audience-grid,.lab-grid,.pipeline,.process{grid-template-columns:1fr}
+      .edge-card{min-height:auto}
+      .metric-grid{grid-template-columns:1fr 1fr}
+      .footer-cta{padding:100px 0;min-height:auto}
+      .capabilities{gap:14px}
+      .hero-actions .btn{width:100%}
+      .chart{height:220px}
+      .shield{font-size:85px}
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="#top">HUNG <i>/</i> <span>QUANT RESEARCH</span></a>
+      <div class="nav-links">
+        <a href="#research">Research</a>
+        <a href="#work">Work</a>
+        <a href="#process">Process</a>
+        <a href="#about">About</a>
+        <a class="btn" href="#contact">Start a project <span>→</span></a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero" id="top">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <div class="eyebrow">Systematic thinking. Real results.</div>
+          <h1>TURN YOUR TRADING IDEA INTO A <span class="accent">TESTED SYSTEM.</span></h1>
+          <p class="lead">I research, backtest and build systematic trading strategies for Forex, Gold, Crypto and Futures — from raw price action to reproducible execution.</p>
+
+          <div class="capabilities">
+            <div class="capability"><span class="icon">↗</span>Strategy Research</div>
+            <div class="capability"><span class="icon">▣</span>Backtesting</div>
+            <div class="capability"><span class="icon">⚙</span>Optimization</div>
+            <div class="capability"><span class="icon">ϟ</span>Automation</div>
+          </div>
+
+          <div class="chips">
+            <span class="chip">XAUUSD</span><span class="chip">Forex</span><span class="chip">Crypto</span>
+            <span class="chip">Python</span><span class="chip">MQL5</span><span class="chip">Walk-forward testing</span>
+            <span class="chip">Risk &amp; robustness analysis</span>
+          </div>
+
+          <div class="hero-actions">
+            <a class="btn primary" href="#contact">Discuss My Strategy →</a>
+            <a class="btn ghost" href="#research">View Research</a>
+          </div>
+        </div>
+
+        <form class="panel form-panel lead-form" data-form>
+          <h3>Have a trading idea?</h3>
+          <p class="small">Tell me about it. I’ll help turn it into a structured research plan.</p>
+
+          <label>What do you need?</label>
+          <select name="need">
+            <option>Backtest a strategy</option>
+            <option>Build an automated system</option>
+            <option>Audit an existing strategy</option>
+            <option>Research a new setup</option>
+          </select>
+
+          <label>Market</label>
+          <select name="market">
+            <option>XAUUSD / Forex / Crypto</option>
+            <option>XAUUSD</option><option>Forex</option><option>Crypto</option><option>Futures</option>
+          </select>
+
+          <label>Describe your idea</label>
+          <textarea name="idea" placeholder="Entry logic, timeframe, assumptions, goals..."></textarea>
+
+          <label>Your email / Telegram</label>
+          <input name="contact" placeholder="you@example.com or @username" required />
+
+          <button class="btn primary wide" type="submit">Discuss my strategy →</button>
+          <div class="trust">▣ Your strategy stays confidential · NDA available</div>
+        </form>
+      </div>
+
+      <div class="statsbar">
+        <div class="stat"><strong>Research</strong><span>Rule-based, testable hypotheses</span></div>
+        <div class="stat"><strong>Backtest</strong><span>Costs, slippage, realistic assumptions</span></div>
+        <div class="stat"><strong>Validate</strong><span>OOS, walk-forward, robustness</span></div>
+        <div class="stat"><strong>Build</strong><span>From idea to executable system</span></div>
+      </div>
+    </div>
+  </header>
+
+  <section class="section" id="work">
+    <div class="container">
+      <div class="eyebrow">02 / What I can build</div>
+      <h2>WHAT I CAN <span class="accent">BUILD.</span></h2>
+      <p class="lead">Turn trading ideas into research systems — from hypothesis to validated, executable strategies.</p>
+
+      <div class="grid3">
+        <article class="card"><span class="icon">↗</span><h3>Strategy Research</h3><p>Turn a trading hypothesis into explicit rules.</p><div class="micro">Idea → Rules → Testable strategy</div></article>
+        <article class="card"><span class="icon">▣</span><h3>Backtesting</h3><p>Test strategies with realistic spread, slippage, fees and execution assumptions.</p><div class="micro">Historical data → Costs → Metrics</div></article>
+        <article class="card"><span class="icon">⚙</span><h3>Strategy Optimization</h3><p>Tune parameters without blindly curve-fitting historical data.</p><div class="micro">Parameter search → Robustness → Stability</div></article>
+        <article class="card"><span class="icon">ϟ</span><h3>Trading Automation</h3><p>Convert validated logic into automated execution.</p><div class="micro">Signals → Execution → Monitoring</div></article>
+        <article class="card"><span class="icon">⌁</span><h3>Trading Analytics</h3><p>Equity curve, expectancy, drawdown, win rate and R-distribution.</p><div class="micro">Performance → Risk → Insight</div></article>
+        <article class="card"><span class="icon">⌕</span><h3>Existing System Audit</h3><p>Find leakage, overfitting and unrealistic assumptions.</p><div class="micro">Diagnose → Validate → Improve</div></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="process">
+    <div class="container">
+      <div class="eyebrow">Evidence over emotion</div>
+      <h2>RESEARCH, NOT <span class="accent">PROMISES.</span></h2>
+      <p class="lead">I don’t sell signals. I build systems that can be tested, challenged and reproduced.</p>
+
+      <div class="process">
+        <div class="step"><b>01</b><strong>IDEA</strong><p>Start with observable market behavior.</p></div>
+        <div class="step"><b>02</b><strong>RULE DEFINITION</strong><p>Translate the concept into explicit entries and exits.</p></div>
+        <div class="step"><b>03</b><strong>DATA VALIDATION</strong><p>Check data quality, sessions and realistic costs.</p></div>
+        <div class="step"><b>04</b><strong>BACKTEST</strong><p>Evaluate historical behavior with transparent metrics.</p></div>
+        <div class="step"><b>05</b><strong>ROBUSTNESS</strong><p>Test sensitivity across parameters and regimes.</p></div>
+        <div class="step"><b>06</b><strong>WALK-FORWARD</strong><p>Validate on unseen data with rolling windows.</p></div>
+        <div class="step"><b>07</b><strong>FORWARD TEST</strong><p>Run in realistic conditions without capital risk.</p></div>
+        <div class="step"><b>08</b><strong>DEPLOYMENT</strong><p>Only deploy logic that survives prior stages.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="research">
+    <div class="container">
+      <div class="eyebrow">Featured research</div>
+      <h2>Featured Research: <span class="accent">XAUUSD Price Action Research Engine</span></h2>
+      <p class="lead">From raw price action to a tested, rules-based research framework.</p>
+
+      <div class="case-grid">
+        <div class="panel dashboard">
+          <div class="fake-tabs"><span class="fake-tab">XAUUSD</span><span class="fake-tab">Equity Curve</span><span class="fake-tab">Setup Distribution</span><span class="fake-tab">Regime Analysis</span></div>
+          <div class="chart" aria-label="Decorative market chart background"></div>
+          <div class="metric-grid">
+            <div class="metric"><strong>OOS</strong><span>Separate validation</span></div>
+            <div class="metric"><strong>WFA</strong><span>Rolling validation</span></div>
+            <div class="metric"><strong>MC</strong><span>Stress testing</span></div>
+          </div>
+        </div>
+        <div class="side-list">
+          <div class="feature"><span class="icon">◎</span><div><h3>Problem</h3><p>Discover repeatable price-action setups without arbitrary indicator dependency.</p></div></div>
+          <div class="feature"><span class="icon">▣</span><div><h3>Dataset</h3><p>Clean historical market data with explicit session, spread and execution assumptions.</p></div></div>
+          <div class="feature"><span class="icon">▤</span><div><h3>Research</h3><p>Candidate setup discovery, regime analysis, walk-forward validation and robustness testing.</p></div></div>
+          <div class="feature"><span class="icon">↗</span><div><h3>Metrics</h3><p>Expectancy, profit factor, max drawdown, R-distribution and stability across regimes.</p></div></div>
+          <a class="btn primary" href="#contact">Discuss this type of research →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="eyebrow">My research framework</div>
+      <h2>HOW I FIND AN <span class="accent">EDGE</span></h2>
+      <p class="lead">Start with price behavior. Form hypotheses. Try to destroy them. Keep what survives.</p>
+
+      <div class="edge-grid">
+        <article class="card edge-card"><b class="accent">01</b><h3>Observe Price</h3><p>Understand what the market is doing right now.</p><ul><li>Price action</li><li>Volatility</li><li>Liquidity</li><li>Session</li><li>Structure</li></ul><div class="mini-chart"></div></article>
+        <article class="card edge-card"><b class="accent">02</b><h3>Generate Hypotheses</h3><p>Look for recurring behavior worth testing.</p><ul><li>Setup discovery</li><li>Context combinations</li><li>Entry / exit logic</li></ul><div class="mini-chart"></div></article>
+        <article class="card edge-card"><b class="accent">03</b><h3>Falsify</h3><p>Try to prove the idea wrong.</p><ul><li>Out-of-sample</li><li>Monte Carlo</li><li>Walk-forward</li><li>Regime testing</li></ul><div class="mini-chart"></div></article>
+        <article class="card edge-card"><b class="accent">04</b><h3>Keep What Survives</h3><p>Keep robust, repeatable behavior and simplify the rules.</p><ul><li>Robust behavior</li><li>Simplified rules</li><li>Repeatable logic</li></ul><div class="mini-chart"></div></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="eyebrow">Build. Test. Improve. Repeat.</div>
+      <h2>INTERACTIVE <span class="accent">TRADING LAB.</span></h2>
+
+      <div class="lab-grid">
+        <div class="lab-intro">
+          <p class="lead">Turn a trading idea into a structured research request in seconds.</p>
+          <div class="feature"><span class="icon">△</span><div><h3>From idea to research spec</h3><p>Structured, professional, repeatable.</p></div></div>
+          <div class="feature"><span class="icon">▣</span><div><h3>Quant-ready output</h3><p>Designed for backtesting and analysis.</p></div></div>
+          <div class="feature"><span class="icon">ϟ</span><div><h3>Save time</h3><p>Focus on what matters: better hypotheses.</p></div></div>
+        </div>
+
+        <div class="panel lab-panel">
+          <div class="eyebrow">01 / Configure your idea</div>
+          <h3>Build Your Research Request</h3>
+          <label>Market</label><select id="lab-market"><option>XAUUSD</option><option>Forex</option><option>Crypto</option></select>
+          <label>Timeframe</label><select id="lab-tf"><option>M5</option><option>M15</option><option>H1</option></select>
+          <label>Idea</label><select id="lab-idea"><option>Liquidity Sweep</option><option>Breakout</option><option>Reversal</option><option>Continuation</option></select>
+          <label>Entry Concept</label><select id="lab-entry"><option>Reversal</option><option>Momentum</option><option>Retest</option></select>
+          <label>Risk Model</label><select id="lab-risk"><option>Fixed R</option><option>Volatility adjusted</option></select>
+          <button class="btn primary wide" id="run-lab" type="button">Run Example Research →</button>
+        </div>
+
+        <div class="panel lab-panel">
+          <div class="eyebrow">02 / Generated output</div>
+          <h3>Research specification generated</h3>
+          <div class="check-list">
+            <div class="check-item"><span class="check">✓</span><div><strong>Entry condition</strong><div class="small" id="spec-entry">Clear, rule-based entry conditions.</div></div></div>
+            <div class="check-item"><span class="check">✓</span><div><strong>Invalidations</strong><div class="small">Define when the idea is no longer valid.</div></div></div>
+            <div class="check-item"><span class="check">✓</span><div><strong>Required dataset</strong><div class="small" id="spec-data">Market, timeframe and session requirements.</div></div></div>
+            <div class="check-item"><span class="check">✓</span><div><strong>Backtest methodology</strong><div class="small">Historical window, execution model, costs and metrics.</div></div></div>
+            <div class="check-item"><span class="check">✓</span><div><strong>Evaluation metrics</strong><div class="small">Expectancy, drawdown, PF, stability and robustness.</div></div></div>
+          </div>
+          <a class="btn primary wide" href="#contact">Send this research request →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="eyebrow">Technology</div>
+      <h2>TECHNOLOGY BEHIND THE <span class="accent">RESEARCH.</span></h2>
+      <p class="lead">Reliable research pipelines and automation infrastructure — from market data to deployment.</p>
+
+      <div class="pipeline">
+        <div class="pipe"><span class="icon">▣</span><strong>Market Data</strong><p>Collect, normalize and validate multi-asset data.</p></div>
+        <div class="pipe"><span class="icon">▤</span><strong>Research Engine</strong><p>Engineer features and generate testable datasets.</p></div>
+        <div class="pipe"><span class="icon">⚙</span><strong>Strategy Logic</strong><p>Translate ideas into explicit rules.</p></div>
+        <div class="pipe"><span class="icon">↗</span><strong>Backtest Engine</strong><p>Run repeatable tests with realistic assumptions.</p></div>
+        <div class="pipe"><span class="icon">◇</span><strong>Validation</strong><p>Evaluate robustness across periods and regimes.</p></div>
+        <div class="pipe"><span class="icon">▶</span><strong>Execution</strong><p>Deploy validated logic to trading infrastructure.</p></div>
+        <div class="pipe"><span class="icon">⌁</span><strong>Monitoring</strong><p>Track performance, risk and system health.</p></div>
+      </div>
+
+      <div class="techs">
+        <span class="tech">Python</span><span class="tech">MQL5</span><span class="tech">MetaTrader 5</span>
+        <span class="tech">Pandas</span><span class="tech">NumPy</span><span class="tech">TradingView</span><span class="tech">Cloudflare</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="about">
+    <div class="container">
+      <div class="privacy-hero">
+        <div>
+          <div class="eyebrow">Trust. Privacy. Your advantage.</div>
+          <h2>YOUR EDGE <span class="accent">STAYS YOURS.</span></h2>
+          <p class="lead">Trading strategies are developed privately. Your ideas, logic, code and credentials stay under your control.</p>
+        </div>
+        <div class="shield">▣</div>
+      </div>
+
+      <div class="grid4">
+        <article class="card"><span class="icon">▤</span><h3>NDA Available</h3><p>Discuss strategy details under a non-disclosure agreement when needed.</p><div class="micro">Confidential by design</div></article>
+        <article class="card"><span class="icon">▣</span><h3>Private Logic</h3><p>Your trading rules and methodology are not published or reused.</p><div class="micro">Your ideas. Yours only.</div></article>
+        <article class="card"><span class="icon">&lt;/&gt;</span><h3>Your Repository</h3><p>Code, documentation and research deliverables can live directly in your repository.</p><div class="micro">Full ownership</div></article>
+        <article class="card"><span class="icon">═</span><h3>Your Infrastructure</h3><p>Credentials and execution environments remain under your control.</p><div class="micro">Your environment. Your control.</div></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="eyebrow">Collaboration</div>
+      <h2>WHO I <span class="accent">WORK WITH</span></h2>
+      <p class="lead">Traders, teams and projects that want systematic research, testing and software execution.</p>
+
+      <div class="audience-grid">
+        <article class="card audience-card"><span class="chip">INDIVIDUALS</span><h3>Independent Traders</h3><p>For traders with an idea that needs proper testing, validation and refinement.</p><ul><li>Validate your trading ideas</li><li>Backtest and analyze performance</li><li>Turn concepts into executable strategies</li></ul></article>
+        <article class="card audience-card"><span class="chip">TEAMS</span><h3>Trading Teams</h3><p>For teams needing research tooling, custom analytics or automation.</p><ul><li>Custom research tools and analytics</li><li>Strategy development and automation</li><li>Integrate with existing workflows</li></ul></article>
+        <article class="card audience-card"><span class="chip">PROJECTS</span><h3>Fintech / Prop Projects</h3><p>For products that need someone who understands both product engineering and trading logic.</p><ul><li>Bridge trading logic and product design</li><li>Build and iterate technical solutions</li><li>From MVP to production-ready systems</li></ul></article>
+      </div>
+      <div class="center" style="margin-top:34px"><a class="btn primary" href="#contact">Start a conversation →</a></div>
+    </div>
+  </section>
+
+  <section class="footer-cta section" id="contact">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="eyebrow">Let’s build together</div>
+          <h2>HAVE A STRATEGY YOU WANT <span class="accent">TESTED?</span></h2>
+          <p class="lead">Send me the idea. I’ll turn it into a research specification before implementation begins.</p>
+          <div class="usp-row">
+            <div class="usp"><strong>From idea to specification</strong><span>Clear requirements and logic design</span></div>
+            <div class="usp"><strong>Evidence-first</strong><span>Real data, realistic assumptions</span></div>
+            <div class="usp"><strong>Transparent process</strong><span>You know what happens next</span></div>
+            <div class="usp"><strong>Built for serious use</strong><span>Individuals, teams and products</span></div>
+          </div>
+        </div>
+
+        <form class="panel form-panel lead-form" data-form>
+          <h3>Tell me about your idea</h3>
+          <p class="small">I’ll get back to you with suggested next steps and a proposed research plan.</p>
+          <label>Market</label><select name="market"><option>Select market(s)</option><option>XAUUSD</option><option>Forex</option><option>Crypto</option><option>Futures</option></select>
+          <label>Strategy / Hypothesis</label><textarea name="idea" placeholder="e.g. moving average breakout, liquidity sweep, mean reversion..."></textarea>
+          <label>What do you need?</label><select name="need"><option>Select what you need</option><option>Research</option><option>Backtest</option><option>Automation</option><option>Audit</option></select>
+          <label>Current stage</label><select name="stage"><option>Idea only</option><option>Manual strategy</option><option>Already coded</option><option>Already backtested</option></select>
+          <label>Preferred contact</label><input name="contact" placeholder="Email / Telegram / Discord" required />
+          <button class="btn primary wide" type="submit">Review my strategy →</button>
+          <div class="disclaimer">Research and software development services only. Nothing here is financial or investment advice.</div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <div class="toast" id="toast">Your message draft is ready. Add your real contact endpoint before production.</div>
+
+  <script>
+    // Replace this with your actual Formspree / API / Cloudflare Worker endpoint.
+    const CONTACT_ENDPOINT = "";
+
+    document.querySelectorAll("[data-form]").forEach(form=>{
+      form.addEventListener("submit", async (e)=>{
+        e.preventDefault();
+        const data = Object.fromEntries(new FormData(form).entries());
+
+        if(CONTACT_ENDPOINT){
+          try{
+            const r = await fetch(CONTACT_ENDPOINT,{
+              method:"POST",
+              headers:{"Content-Type":"application/json"},
+              body:JSON.stringify(data)
+            });
+            if(!r.ok) throw new Error("Request failed");
+            showToast("Request sent successfully.");
+            form.reset();
+          }catch(err){
+            showToast("Could not send. Check your form endpoint.");
+          }
+        }else{
+          console.log("Lead captured locally:",data);
+          showToast("Demo form: set CONTACT_ENDPOINT in the HTML before production.");
+        }
+      })
+    });
+
+    document.getElementById("run-lab").addEventListener("click",()=>{
+      const market=document.getElementById("lab-market").value;
+      const tf=document.getElementById("lab-tf").value;
+      const idea=document.getElementById("lab-idea").value;
+      const entry=document.getElementById("lab-entry").value;
+      document.getElementById("spec-entry").textContent=`${idea} + ${entry} logic expressed as explicit, testable conditions.`;
+      document.getElementById("spec-data").textContent=`${market} ${tf} data with session, spread and execution assumptions.`;
+      showToast("Example research specification generated.");
+    });
+
+    function showToast(msg){
+      const el=document.getElementById("toast");
+      el.textContent=msg;
+      el.classList.add("show");
+      clearTimeout(window.__toast);
+      window.__toast=setTimeout(()=>el.classList.remove("show"),2600);
+    }
+  </script>
+</body>
+</html>
